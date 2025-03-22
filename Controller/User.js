@@ -104,4 +104,30 @@ const login = async (req, res) => {
       res.status(500).json({ error: 'Server error' });
     }
   }
-module.exports = { register ,login, logout,getAll};
+
+
+  const edit_profile = async (req, res) => {
+    try {
+        const userId = req.user.id; 
+        const allowedUpdates = ["name", "email", "phone", "profilePicture"];
+
+        const updates = {};
+        Object.keys(req.body).forEach((key) => {
+            if (allowedUpdates.includes(key)) {
+                updates[key] = req.body[key];
+            }
+        });
+
+        const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Profile updated successfully", user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { register ,login, logout,getAll,edit_profile };
