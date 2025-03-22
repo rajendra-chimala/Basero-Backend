@@ -2,8 +2,8 @@ const Room = require("../Model/Room");
 
 const createRoom = async (req, res) => {
     try {
-        const { title, description, price, location, size, amenities } = req.body;
-        const ownerID = req.user._id;
+        const { title, description, price, location, size, amenities,owner } = req.body;
+        // const {ownerID} = req.user;
 
         const newRoom = new Room({
             title,
@@ -13,7 +13,7 @@ const createRoom = async (req, res) => {
             size,
             amenities: amenities ? amenities.split(",") : [],
             images: req.file ? [req.file.path] : [], // Save uploaded image path
-            owner:ownerID
+            owner
         });
 
         await newRoom.save();
